@@ -98,23 +98,29 @@
     <div id="app-container" class="md:border-4 md:rounded-2xl border-indigo-500">
         
         <!-- 1. SPLASH SCREEN -->
-        <div id="splash-screen" class="screen active flex-col items-center justify-center p-6 text-center z-20" style="background-image: url('./Gemini_Generated_Image_osrizvosrizvosri.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div id="splash-screen" class="screen active flex-col items-center justify-center p-6 text-center z-20" style="background-image: url('https://i.imgur.com/zaOJMBl.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             
+            <!-- Logo Kiri Bawah -->
+            <img src="https://i.imgur.com/VK9OERw.png" alt="Logo Kiri Bawah" class="absolute bottom-0 -left-24 md:-left-40 lg:-left-60 h-64 md:h-[450px] lg:h-[600px] w-auto drop-shadow-xl pointer-events-none z-0">
+
+            <!-- Logo Kanan Bawah -->
+            <img src="https://i.imgur.com/SYD7P0c.png" alt="Logo Kanan Bawah" class="absolute bottom-0 -right-8 md:right-0 lg:-right-10 h-64 md:h-[450px] lg:h-[600px] w-auto drop-shadow-xl pointer-events-none z-0">
+
             <!-- Title -->
-            <h1 class="text-3xl md:text-6xl font-extrabold mb-2 mt-12 md:mt-20 drop-shadow-[0_6px_8px_rgba(0,0,0,0.9)]" style="-webkit-text-stroke: 2px rgba(0,0,0,0.6);">
+            <h1 class="relative z-10 text-4xl md:text-5xl font-extrabold mb-2 mt-4 md:mt-8 drop-shadow-[0_6px_8px_rgba(0,0,0,0.9)]" style="-webkit-text-stroke: 2px rgba(0,0,0,0.6);">
                 <span class="text-[#86efac]">Gastro</span> <span class="text-[#d8b4fe]">Galaxy</span>
             </h1>
-            <h2 class="text-base md:text-xl font-bold text-pink-300 mb-8 drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] tracking-wide bg-black/40 px-6 py-2 rounded-full backdrop-blur-sm border border-pink-400/30">A Journey Inside the Human Body</h2>
+            <h2 class="relative z-10 text-sm md:text-lg font-bold text-pink-300 mb-8 drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] tracking-wide bg-black/40 px-6 py-2 rounded-full backdrop-blur-sm border border-pink-400/30">A Journey Inside the Human Body</h2>
             
             <!-- Creator Info -->
-            <div class="bg-indigo-950/70 p-5 rounded-2xl border border-indigo-300/50 mb-8 backdrop-blur-md w-72 shadow-2xl">
+            <div class="relative z-10 bg-indigo-950/70 p-5 rounded-2xl border border-indigo-300/50 mb-8 backdrop-blur-md w-72 shadow-2xl">
                 <p class="text-sm text-indigo-200 mb-1 drop-shadow-md">Dibuat oleh:</p>
                 <p class="text-xl font-extrabold text-white mb-1 drop-shadow-md">Erlina Fitri Hapsari</p>
                 <p class="text-xs text-indigo-300 drop-shadow-md font-semibold">Cabang PGRI Wuryantoro</p>
             </div>
 
             <!-- Buttons -->
-            <div class="flex flex-col space-y-5 w-64">
+            <div class="relative z-10 flex flex-col space-y-5 w-64">
                 <button onclick="navTo('info-screen')" class="pulse-btn bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-4 px-8 rounded-full text-xl shadow-[0_4px_25px_rgba(34,197,94,0.6)] transition-transform transform hover:scale-110 active:scale-95 border-b-4 border-green-700 active:border-b-0 active:mt-1">
                     Mulai Bermain
                 </button>
@@ -172,7 +178,7 @@
         </div>
 
         <!-- 3. GAMEPLAY SCREEN -->
-        <div id="game-screen" class="screen flex-col z-10" style="background-image: url('./Gemini_Generated_Image_9r00749r00749r00.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div id="game-screen" class="screen flex-col z-10" style="background-image: url('https://i.imgur.com/utCGWPA.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             
             <!-- HUD (Top Bar) -->
             <div class="absolute top-0 w-full p-6 flex justify-between items-center bg-gradient-to-b from-indigo-950/90 to-transparent z-30 pointer-events-none">
@@ -351,82 +357,28 @@
             hard:   { balSpeedX: 3.5, balSpeedY: 1.5, balSpawnRate: 700, time: 120 }
         };
 
-        // --- 3. WEB AUDIO API SYNTHESIS (LOUDER & MORE CHEERFUL) ---
+        // --- 3. AUDIO & MUSIC PLAYER (USING CUSTOM AUDIO FILE) ---
         let audioCtx = null;
         let audioEnabled = true;
 
-        // Procedural Background Music Player (Synthesizer Internal)
+        // Custom BGM Audio Element (Lagu Sistem Pencernaan)
+        const bgmAudio = new Audio('https://ia801504.us.archive.org/27/items/sistem-pencernaan-audio/Sistem_Pencernaan.mp3');
+        bgmAudio.loop = true;
+        bgmAudio.volume = 0.6; // Volume lagu latar yang seimbang
+
         const BGMPlayer = {
-            isPlaying: false,
-            timerID: null,
-            tempo: 160, // DI-PERCEPAT menjadi sangat ceria! (160 BPM)
-            nextNoteTime: 0,
-            current16thNote: 0,
-            
-            // Progresi Kord Tema C Major (Lebih Cerah & Upbeat)
-            bassNotes: [130.81, 130.81, 174.61, 174.61, 196.00, 196.00, 130.81, 130.81], // C3, F3, G3, C3
-            melodyNotes: [
-                261.63, 329.63, 392.00, 523.25, // C Major Arpeggio (C4, E4, G4, C5)
-                349.23, 440.00, 523.25, 698.46, // F Major Arpeggio (F4, A4, C5, F5)
-                392.00, 493.88, 587.33, 783.99, // G Major Arpeggio (G4, B4, D5, G5)
-                261.63, 392.00, 523.25, 659.25  // C Major High (C4, G4, C5, E5)
-            ],
-            
-            scheduleNote: function(beatNumber, time) {
-                // Melodi Utama (Pluck Arpeggio) - Volume DINAJIKKAN (0.6)
-                let melodyFreq = this.melodyNotes[beatNumber % this.melodyNotes.length];
-                this.playTone(melodyFreq, 'triangle', time, 0.20, 0.6);
-                
-                // Suara Bass (Setiap ketukan pertama) - Volume DINAIKKAN (0.8)
-                if (beatNumber % 4 === 0) {
-                    let bassFreq = this.bassNotes[Math.floor(beatNumber / 16) % this.bassNotes.length];
-                    this.playTone(bassFreq, 'sine', time, 0.3, 0.8);
-                }
-            },
-            
-            playTone: function(freq, type, time, dur, vol) {
-                if (!audioCtx) return;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.value = freq;
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                gain.gain.setValueAtTime(vol, time);
-                gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-                
-                osc.start(time);
-                osc.stop(time + dur);
-            },
-            
-            nextNote: function() {
-                const secondsPerBeat = 60.0 / this.tempo;
-                this.nextNoteTime += 0.25 * secondsPerBeat; 
-                this.current16thNote++;
-                if(this.current16thNote >= 64) this.current16thNote = 0; 
-            },
-            
-            scheduler: function() {
-                while (this.nextNoteTime < audioCtx.currentTime + 0.1) {
-                    this.scheduleNote(this.current16thNote, this.nextNoteTime);
-                    this.nextNote();
-                }
-                this.timerID = requestAnimationFrame(this.scheduler.bind(this));
-            },
-            
             start: function() {
-                if (this.isPlaying) return;
-                if (!audioCtx) initAudio();
-                this.isPlaying = true;
-                this.current16thNote = 0;
-                this.nextNoteTime = audioCtx.currentTime + 0.05;
-                this.scheduler();
+                if (!audioEnabled) return;
+                bgmAudio.play().catch(err => {
+                    console.log("Autoplay blocked or waiting for user interaction:", err);
+                });
             },
-            
             stop: function() {
-                this.isPlaying = false;
-                cancelAnimationFrame(this.timerID);
+                bgmAudio.pause();
+            },
+            reset: function() {
+                bgmAudio.currentTime = 0;
+                bgmAudio.pause();
             }
         };
 
@@ -456,7 +408,6 @@
             }
             
             if (audioEnabled) {
-                // Musik main kapan saja selama tidak di-pause
                 if(!isPaused) {
                     BGMPlayer.start();
                 }
@@ -465,7 +416,7 @@
             }
         }
 
-        // SFX VOLUME JUGA DINAIKKAN!
+        // SFX Generator (Tetap dipertahankan untuk efek tembak, letusan balon, & kuis)
         function playSound(type) {
             if (!audioEnabled || !audioCtx) return;
             
@@ -480,7 +431,7 @@
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(600, now);
                 osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
-                gainNode.gain.setValueAtTime(0.9, now); // Vol 0.9
+                gainNode.gain.setValueAtTime(0.9, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 osc.start(now);
                 osc.stop(now + 0.1);
@@ -489,7 +440,7 @@
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(400, now);
                 osc.frequency.linearRampToValueAtTime(150, now + 0.15);
-                gainNode.gain.setValueAtTime(0.8, now); // Vol 0.8
+                gainNode.gain.setValueAtTime(0.8, now);
                 gainNode.gain.linearRampToValueAtTime(0.01, now + 0.15);
                 osc.start(now);
                 osc.stop(now + 0.15);
@@ -498,18 +449,18 @@
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(900, now);
                 osc.frequency.exponentialRampToValueAtTime(200, now + 0.1);
-                gainNode.gain.setValueAtTime(0.9, now); // Vol 0.9
+                gainNode.gain.setValueAtTime(0.9, now);
                 gainNode.gain.linearRampToValueAtTime(0.01, now + 0.1);
                 osc.start(now);
                 osc.stop(now + 0.1);
             }
             else if (type === 'correct') {
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now); // C5
-                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-                osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
-                gainNode.gain.setValueAtTime(0.8, now); // Vol 0.8
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                osc.frequency.setValueAtTime(783.99, now + 0.2);
+                osc.frequency.setValueAtTime(1046.50, now + 0.3);
+                gainNode.gain.setValueAtTime(0.8, now);
                 gainNode.gain.linearRampToValueAtTime(0, now + 0.5);
                 osc.start(now);
                 osc.stop(now + 0.5);
@@ -518,7 +469,7 @@
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(300, now);
                 osc.frequency.linearRampToValueAtTime(100, now + 0.4);
-                gainNode.gain.setValueAtTime(0.8, now); // Vol 0.8
+                gainNode.gain.setValueAtTime(0.8, now);
                 gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
                 osc.start(now);
                 osc.stop(now + 0.4);
@@ -527,7 +478,7 @@
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(200, now);
                 osc.frequency.linearRampToValueAtTime(50, now + 1.0);
-                gainNode.gain.setValueAtTime(0.8, now); // Vol 0.8
+                gainNode.gain.setValueAtTime(0.8, now);
                 gainNode.gain.linearRampToValueAtTime(0, now + 1.2);
                 osc.start(now);
                 osc.stop(now + 1.2);
@@ -538,7 +489,7 @@
                 osc.frequency.setValueAtTime(500, now + 0.2);
                 osc.frequency.setValueAtTime(600, now + 0.4);
                 osc.frequency.setValueAtTime(800, now + 0.6);
-                gainNode.gain.setValueAtTime(0.9, now); // Vol 0.9
+                gainNode.gain.setValueAtTime(0.9, now);
                 gainNode.gain.linearRampToValueAtTime(0, now + 1.5);
                 osc.start(now);
                 osc.stop(now + 1.5);
